@@ -38,7 +38,7 @@ class sine_wave:
                 start = end
 
 
-size = (1024, 512)
+size = (1024, 700)
 start_x = size[0] // 3
 start_y = size[1] // 4
 
@@ -47,7 +47,7 @@ class main:
     def __init__(self):
         self._running = True
         self._display_surf = None
-        self.size = (1024, 512)
+        self.size = size
 
     def on_init(self):
         pygame.init()
