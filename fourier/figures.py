@@ -2,7 +2,7 @@ import pygame, sys, math
 
 
 class arrow:
-    def __init__(self, start, end, win_size):
+    def __init__(self, start, end):
         self.length = int(
             math.sqrt((start[0] - end[0]) ** 2 + (start[1] - end[1]) ** 2)
         )
@@ -10,7 +10,6 @@ class arrow:
         self.end = end
         self.angle = math.atan2((start[1] - end[1]), (end[0] - start[0]))
         self.width = self.length // 100
-        self.window_width, self.window_height = win_size
 
     def rotate(self, x, y):
         r_x = x * math.cos(self.angle) - y * math.sin(self.angle)
@@ -34,6 +33,23 @@ class arrow:
         return self.head, self.body
 
 
+class grid:
+    def __init__(self, color, start, width, size):
+        self.color = color
+        self.vertical = [
+            ((i, start[0]), (i, start[0] + size))
+            for i in range(start[0], start[0] + size + width, width)
+        ]
+        self.horizontal = [
+            ((start[1], i), (start[1] + size, i))
+            for i in range(start[1], start[1] + size + width, width)
+        ]
+
+    def draw(self, surface):
+        for i in self.vertical + self.horizontal:
+            pygame.draw.line(surface, self.color, i[0], i[1])
+
+
 class main:
     def __init__(self):
         self._running = True
@@ -45,20 +61,18 @@ class main:
         self._display_surf = pygame.display.set_mode(self.size, 0, 32)
         self._running = True
 
-        self.arrow = arrow((256, 256), (300, 300), self.size)
-        self.head, self.body = self.arrow.create(math.pi)
+        self.grid = grid((0, 255, 100), (100, 100), 50, 200)
 
     def on_event(self, event):
         if event.type == pygame.QUIT:
-            self._running = False
+            self.on_cleanup()
 
     def on_loop(self):
         pass
 
     def on_render(self):
         self._display_surf.fill((0, 0, 0))
-        pygame.draw.polygon(self._display_surf, (0, 250, 250), self.head)
-        pygame.draw.polygon(self._display_surf, (0, 250, 250), self.body)
+        self.grid.draw(self._display_surf)
         pygame.display.update()
 
     def on_cleanup(self):
