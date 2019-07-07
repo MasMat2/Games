@@ -45,16 +45,22 @@ class compact_wave(sine_wave):
         self.ruler = ruler(
             (255, 255, 255),
             (start_x, start_y + radius * 1.2),
-            (start_x * n_x - 62, start_y + radius * 1.2),
-            20,
+            (start_x * n_x - 60, start_y + radius * 1.2),
+            4,
+        )
+        self.arrow = arrow(
+            (255, 255, 255),
+            (start_x, start_y + radius * 1.2),
+            (start_x * n_x, start_y + radius * 1.2),
         )
 
     def draw(self, surface):
         super().draw(surface)
-        self.ruler.draw(surface)
+        self.ruler.draw(surface, True)
+        self.arrow.draw(surface)
 
 
-size = (1024, 700)
+size = (1025, 700)
 n_x = 5
 start_x = size[0] // n_x
 n_y = 4
