@@ -1,18 +1,19 @@
 import pygame, sys, math
+from figures import *
 
 
 class sine_func:
     def __init__(self, size):
-        self.t = 0
         self.width, self.height = size
+        self.t = 0
         self.x = 1
         self.y = 0
 
     def update(self):
-        self.t += math.pi * 2 / 60
-        self.x = math.cos(self.t) * 50
-        self.y = math.sin(self.t) * 50
-        return (int(self.x + self.width // 6), int(-self.y + start_y))
+        self.t += math.pi * 2 / 180
+        self.x = math.cos(self.t) * radius
+        self.y = math.sin(self.t) * radius
+        return (int(self.x + start_x - radius * 2), int(-self.y + start_y))
 
 
 class sine_wave:
@@ -22,8 +23,8 @@ class sine_wave:
 
     def update(self, new_point):
         self.points = [new_point] + self.points
-        if len(self.points) > start_x * 2:
-            self.points = self.points[0 : start_x * 2]
+        if len(self.points) > start_x * (n_x - 1):
+            self.points = self.points[0 : start_x * (n_x - 1)]
 
     def draw(self, surface):
         x = start_x
@@ -36,12 +37,29 @@ class sine_wave:
                 end = (x, point)
                 pygame.draw.line(surface, (200, 2, 200), start, end)
                 start = end
-        
+
+
+class compact_wave(sine_wave):
+    def __init__(self, size):
+        super().__init__(size)
+        self.ruler = ruler(
+            (255, 255, 255),
+            (start_x, start_y + radius * 1.2),
+            (start_x * n_x - 62, start_y + radius * 1.2),
+            20,
+        )
+
+    def draw(self, surface):
+        super().draw(surface)
+        self.ruler.draw(surface)
 
 
 size = (1024, 700)
-start_x = size[0] // 3
-start_y = size[1] // 4
+n_x = 5
+start_x = size[0] // n_x
+n_y = 4
+start_y = size[1] // n_y
+radius = 50
 
 
 class main:
@@ -56,7 +74,7 @@ class main:
         self._running = True
 
         self.sine_func = sine_func(self.size)
-        self.sine_wave = sine_wave(self.size)
+        self.sine_wave = compact_wave(self.size)
 
     def on_event(self, event):
         if event.type == pygame.QUIT:
@@ -69,7 +87,11 @@ class main:
     def on_render(self):
         self._display_surf.fill((0, 0, 0))
         pygame.draw.circle(
-            self._display_surf, (200, 200, 2), (start_x // 2, start_y), 50, 1
+            self._display_surf,
+            (200, 200, 2),
+            (start_x - radius * 2, start_y),
+            radius,
+            1,
         )
         pygame.draw.circle(self._display_surf, (200, 2, 200), (self.real, self.imag), 5)
         pygame.draw.line(

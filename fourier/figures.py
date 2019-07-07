@@ -67,29 +67,32 @@ class ruler:
             math.sqrt((start[0] - end[0]) ** 2 + (start[1] - end[1]) ** 2)
         )
 
-    def draw(self, surface):
+    def draw(self, surface, mid_lines=False):
+        mid_line = 4 if mid_lines else 1
         myfont = pygame.font.SysFont("Andale Mono.ttf", 15)
         pygame.draw.line(surface, self.color, self.start, self.end)
         count = 0
         if self.start[1] == self.end[1]:
-            for i in range(self.start[0], self.end[0] + 1, self.length // self.measure):
+            for i in range(self.start[0], self.end[0] + 1, self.length // (self.measure*mid_line)):
                 pygame.draw.line(
                     surface, self.color, (i, self.start[1] - 5), (i, self.start[1] + 5)
                 )
-                textsurface = myfont.render(str(count), False, self.color)
-                textRect = textsurface.get_rect()
-                textRect.center = (i, self.start[1] + 15)
-                surface.blit(textsurface, textRect)
+                if count % mid_line == 0:
+                    textsurface = myfont.render(str(count//mid_line), False, self.color)
+                    textRect = textsurface.get_rect()
+                    textRect.center = (i, self.start[1] + 15)
+                    surface.blit(textsurface, textRect)
                 count += 1
         else:
-            for i in range(self.start[1], self.end[1] + 1, self.length // self.measure):
+            for i in range(self.start[1], self.end[1] + 1, self.length // (self.measure*mid_line)):
                 pygame.draw.line(
                     surface, self.color, (self.start[1] - 5, i), (self.start[1] + 5, i)
                 )
-                textsurface = myfont.render(str(count), False, self.color)
-                textRect = textsurface.get_rect()
-                textRect.center = (self.start[1] + 15, i)
-                surface.blit(textsurface, textRect)
+                if count % mid_line == 0:
+                    textsurface = myfont.render(str(count//mid_line), False, self.color)
+                    textRect = textsurface.get_rect()
+                    textRect.center = (self.start[1] + 15, i)
+                    surface.blit(textsurface, textRect)
                 count += 1
 
 
