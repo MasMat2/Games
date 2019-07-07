@@ -36,6 +36,7 @@ class sine_wave:
                 end = (x, point)
                 pygame.draw.line(surface, (200, 2, 200), start, end)
                 start = end
+        
 
 
 size = (1024, 700)
