@@ -30,7 +30,7 @@ class arrow:
             self.rotate(0, -self.width),
             self.rotate(0, self.width),
             self.rotate(self.length - triang_height, self.width),
-            self.rotate(self.length -triang_height, -self.width),
+            self.rotate(self.length - triang_height, -self.width),
         ]
 
     def draw(self, surface, angle=0):
@@ -72,14 +72,14 @@ class ruler:
         self.length = int(
             math.sqrt((start[0] - end[0]) ** 2 + (start[1] - end[1]) ** 2)
         )
-        self.unit_length=self.length // (self.measure)
-    
+        self.unit_length = self.length // (self.measure)
+
     def get_unit_length(self):
         return self.unit_length
 
     def draw(self, surface, mid_lines=False):
         mid_line = 4 if mid_lines else 1
-        myfont = pygame.font.SysFont("avenir", 15)
+        myfont = pygame.font.SysFont("", 15)
         pygame.draw.line(surface, self.color, self.start, self.end)
         count = 0
         if self.start[1] == self.end[1]:

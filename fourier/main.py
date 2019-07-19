@@ -9,8 +9,8 @@ class sine_func:
         self.x = 1
         self.y = 0
 
-    def update(self):
-        self.t += math.pi * 2 / 180
+    def update(self, x_scale=190, frequency=3):
+        self.t += math.pi * 2 / (x_scale / frequency)
         self.x = math.cos(self.t) * radius
         self.y = math.sin(self.t) * radius
         return (int(self.x + start_x - radius * 2), int(-self.y + start_y))
@@ -42,6 +42,7 @@ class sine_wave:
 class compact_wave(sine_wave):
     def __init__(self, size):
         super().__init__(size)
+        self.sine_func = sine_func(size)
         self.ruler = ruler(
             (255, 255, 255),
             (start_x, start_y + radius * 1.2),
@@ -54,7 +55,20 @@ class compact_wave(sine_wave):
             (start_x * n_x, start_y + radius * 1.2),
         )
 
+    def update(self):
+        self.real, self.imag = self.sine_func.update(
+            self.ruler.get_unit_length(), frequency=3
+        )
+        super().update(self.imag)
+
     def draw(self, surface):
+        pygame.draw.circle(
+            surface, (200, 200, 2), (start_x - radius * 2, start_y), radius, 1
+        )
+        pygame.draw.circle(surface, (200, 2, 200), (self.real, self.imag), 5)
+        pygame.draw.line(
+            surface, (200, 2, 200), (self.real, self.imag), (start_x, self.imag)
+        )
         super().draw(surface)
         self.ruler.draw(surface, True)
         self.arrow.draw(surface)
@@ -79,7 +93,6 @@ class main:
         self._display_surf = pygame.display.set_mode(self.size, 0, 32)
         self._running = True
 
-        self.sine_func = sine_func(self.size)
         self.sine_wave = compact_wave(self.size)
 
     def on_event(self, event):
@@ -87,25 +100,10 @@ class main:
             self._running = False
 
     def on_loop(self):
-        self.real, self.imag = self.sine_func.update()
-        self.sine_wave.update(self.imag)
+        self.sine_wave.update()
 
     def on_render(self):
         self._display_surf.fill((0, 0, 0))
-        pygame.draw.circle(
-            self._display_surf,
-            (200, 200, 2),
-            (start_x - radius * 2, start_y),
-            radius,
-            1,
-        )
-        pygame.draw.circle(self._display_surf, (200, 2, 200), (self.real, self.imag), 5)
-        pygame.draw.line(
-            self._display_surf,
-            (200, 2, 200),
-            (self.real, self.imag),
-            (start_x, self.imag),
-        )
         self.sine_wave.draw(self._display_surf)
         pygame.display.update()
 
