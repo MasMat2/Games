@@ -22,34 +22,30 @@ class arrow:
         self.angle = self.angle + angle if angle else self.angle
         triang_side = 2 * ((triang_height) / (3 ** (1 / 2)))
         self.head = [
-            self.rotate(self.length, 0),
-            self.rotate(self.length - triang_height, triang_side // 2),
-            self.rotate(self.length - triang_height, -triang_side // 2),
+            self.rotate(self.length + triang_height, 0),
+            self.rotate(self.length, triang_side // 2),
+            self.rotate(self.length, -triang_side // 2),
         ]
-        self.body = [
-            self.rotate(0, -self.width),
-            self.rotate(0, self.width),
-            self.rotate(self.length - triang_height, self.width),
-            self.rotate(self.length - triang_height, -self.width),
-        ]
+        self.body = [self.rotate(0, 0), self.rotate(self.length, 0)]
 
     def draw(self, surface, angle=0):
         self.create(angle)
         pygame.draw.polygon(surface, self.color, self.head)
-        pygame.draw.polygon(surface, self.color, self.body)
+        pygame.draw.line(surface, self.color, self.body[0], self.body[1])
 
 
 class grid:
-    def __init__(self, color, start, width, size):
+    def __init__(self, color, start, separation, size):
         self.color = color
         self.vertical = [
-            ((i, start[0]), (i, start[0] + size))
-            for i in range(start[0], start[0] + size + width, width)
+            ((i, start[1]), (i, start[1] + size))
+            for i in range(start[0], start[0] + size + separation, separation)
         ]
         self.horizontal = [
-            ((start[1], i), (start[1] + size, i))
-            for i in range(start[1], start[1] + size + width, width)
+            ((start[0], i), (start[0] + size, i))
+            for i in range(start[1], start[1] + size + separation, separation)
         ]
+        print(start)
 
     def draw(self, surface):
         for i in self.vertical + self.horizontal:
@@ -57,7 +53,7 @@ class grid:
 
 
 class ruler:
-    def __init__(self, color, start, end, measure):
+    def __init__(self, color, start, end, measure, mid_lines=False):
         if abs(math.atan2((start[1] - end[1]), (end[0] - start[0]))) not in [
             math.pi,
             0,
@@ -66,9 +62,10 @@ class ruler:
         ]:
             raise IndexError
         self.color = color
-        self.measure = measure
         self.start = start
         self.end = end
+        self.measure = measure
+        self.mid_lines = mid_lines
         self.length = int(
             math.sqrt((start[0] - end[0]) ** 2 + (start[1] - end[1]) ** 2)
         )
@@ -77,8 +74,8 @@ class ruler:
     def get_unit_length(self):
         return self.unit_length
 
-    def draw(self, surface, mid_lines=False):
-        mid_line = 4 if mid_lines else 1
+    def draw(self, surface):
+        mid_line = 4 if self.mid_lines else 1
         myfont = pygame.font.SysFont("", 15)
         pygame.draw.line(surface, self.color, self.start, self.end)
         count = 0
@@ -98,18 +95,24 @@ class ruler:
                     surface.blit(textsurface, textRect)
                 count += 1
         else:
+            if self.end[1] + 1 < self.start[1]:
+                direction = -1
+            else:
+                direction = 1
             for i in range(
-                self.start[1], self.end[1] + 1, self.length // (self.measure * mid_line)
+                int(self.start[1]),
+                int(self.end[1] + direction),
+                direction * self.length // (self.measure * mid_line),
             ):
                 pygame.draw.line(
-                    surface, self.color, (self.start[1] - 5, i), (self.start[1] + 5, i)
+                    surface, self.color, (self.start[0] - 5, i), (self.start[0] + 5, i)
                 )
                 if count % mid_line == 0:
                     textsurface = myfont.render(
                         str(count // mid_line), False, self.color
                     )
                     textRect = textsurface.get_rect()
-                    textRect.center = (self.start[1] + 15, i)
+                    textRect.center = (self.start[0] - 15, i)
                     surface.blit(textsurface, textRect)
                 count += 1
 
