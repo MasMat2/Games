@@ -39,16 +39,20 @@ class arrow:
         pygame.draw.line(surface, self.color, self.body[0], self.body[1])
 
 
-# class rot_arrow(arrow):
-#     def create(self, start, end, angle=None):
-#         self.length = int(
-#             math.sqrt((start[0] - end[0]) ** 2 + (start[1] - end[1]) ** 2)
-#         )
-#         self.start = start
-#         self.end = end
-#         self.angle = math.atan2((start[1] - end[1]), (end[0] - start[0]))
-#         super().create(angle)
-#         super().draw(surface)
+class rot_arrow(arrow):
+    def __init__(self, color, start, length, angle):
+        self.color = color
+        self.start = start
+        self.end = (start[0]+length*math.cos(angle), start[1]+length*math.sin(angle))
+        self.length = length
+        self.angle = angle
+    
+    def move(self, length, angle):
+        self.end = (self.start[0]+length*math.cos(angle), self.start[1]+length*math.sin(angle))
+        self.length = length
+        self.angle = angle
+
+
 
 
 class grid:
@@ -62,7 +66,6 @@ class grid:
             ((start[0], i), (start[0] + size, i))
             for i in range(start[1], start[1] + size + separation, separation)
         ]
-        print(start)
 
     def draw(self, surface):
         for i in self.vertical + self.horizontal:

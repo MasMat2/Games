@@ -12,7 +12,12 @@ class sine_func:
         self.t += math.pi * 2 / (x_scale / frequency)
         self.x = math.cos(self.t) * radius
         self.y = math.sin(self.t) * radius
-        return (int(self.x + start_x - radius * 2), int(-self.y + start_y))
+    
+    def normal(self):
+        return (int(self.x), int(-self.y))
+    
+    def polar(self):
+        return (self.y, self.t)
 
 
 class sine_wave:
@@ -44,16 +49,12 @@ class compact_grid:
         x, y = 47, 350
         width = 200
         self.grid = grid((0, 100, 100), (x, y), 20, width)
-        self.arrow = arrow(
-            (255, 255, 255),
-            (x + width // 2, y + width // 2),
-            (x + width, y + width // 2),
-        )
+        self.arrow = rot_arrow((255, 255, 255), (x + width // 2, y + width // 2), 0, 0)
 
-    def update(self, real, imag):
-        self.arrow.move((real, imag))
+    def update(self, length, angle):
+        self.arrow.move(length, angle)
 
-    def draw(self, surface, *args):
+    def draw(self, surface):
         self.grid.draw(surface)
         self.arrow.draw(surface)
 
@@ -62,44 +63,49 @@ class compact_wave(sine_wave):
     def __init__(self, size):
         super().__init__(size)
 
+        top, bottom, left, right = start_y - radius,start_y + radius, start_x, start_x * n_x - 60
         self.ruler = [
             ruler(
                 (255, 255, 255),
-                (start_x, start_y + radius * 1.2),
-                (start_x * n_x - 60, start_y + radius * 1.2),
+                (left, bottom),
+                (right, bottom),
                 4,
                 True,
             ),
             arrow(
                 (255, 255, 255),
-                (start_x, start_y + radius * 1.2),
-                (start_x * n_x - 60, start_y + radius * 1.2),
+                (left, bottom),
+                (right, bottom),
             ),
         ]
         self.ruler1 = [
             ruler(
                 (255, 255, 255),
-                (start_x, start_y + radius * 1.2),
-                (start_x, start_y - radius),
+                (left, bottom),
+                (left, top),
                 2,
             ),
             arrow(
                 (255, 255, 255),
-                (start_x, start_y + radius * 1.2),
-                (start_x, start_y - radius),
+                (left, bottom),
+                (left, top),
             ),
         ]
         self.rulers = (self.ruler, self.ruler1)
 
     def update(self, real, imag):
-        super().update(imag)
+        self.real = real + start_x - radius * 2
+        self.imag = imag + start_y
+        super().update(self.imag)
 
-    def draw(self, surface, real, imag):
+    def draw(self, surface):
         pygame.draw.circle(
             surface, (200, 200, 2), (start_x - radius * 2, start_y), radius, 1
         )
-        pygame.draw.circle(surface, (200, 2, 200), (real, imag), 5)
-        pygame.draw.line(surface, (200, 2, 200), (real, imag), (start_x, imag))
+        pygame.draw.circle(surface, (200, 2, 200), (self.real, self.imag), 5)
+        pygame.draw.line(
+            surface, (200, 2, 200), (self.real, self.imag), (start_x, self.imag)
+        )
         super().draw(surface)
         for ruler, arrow in self.rulers:
             ruler.draw(surface)
@@ -135,21 +141,16 @@ class main:
         if event.type == pygame.QUIT:
             self._running = False
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            # self.compact_wave.grid = grid(
-            #     (0, 100, 100), pygame.mouse.get_pos(), 20, 200
-            # )
-            pass
-
     def on_loop(self):
-        self.real, self.imag = self.sine_func.update(unit_length, frequency=3)
+        self.sine_func.update(unit_length, frequency=3)
+        self.real, self.imag = self.sine_func.normal()
         for element in self.compact:
             element.update(self.real, self.imag)
 
     def on_render(self):
         self._display_surf.fill((0, 0, 0))
         for element in self.compact:
-            element.draw(self._display_surf, self.real, self.imag)
+            element.draw(self._display_surf)
         pygame.display.update()
 
     def on_cleanup(self):
