@@ -51,10 +51,11 @@ class compact_grid:
         )
 
     def update(self, real, imag):
-        
+        self.arrow.move((real, imag))
 
     def draw(self, surface, *args):
         self.grid.draw(surface)
+        self.arrow.draw(surface)
 
 
 class compact_wave(sine_wave):

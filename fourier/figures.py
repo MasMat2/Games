@@ -4,20 +4,25 @@ import pygame, sys, math
 class arrow:
     def __init__(self, color, start, end):
         self.color = color
+        self.width = 0
+        self.start = start
         self.length = int(
             math.sqrt((start[0] - end[0]) ** 2 + (start[1] - end[1]) ** 2)
         )
-        self.start = start
-        self.end = end
         self.angle = math.atan2((start[1] - end[1]), (end[0] - start[0]))
-        self.width = 0
 
     def rotate(self, x, y):
         r_x = x * math.cos(self.angle) - y * math.sin(self.angle)
         r_y = y * math.cos(self.angle) + x * math.sin(self.angle)
         return (r_x + self.start[0], -r_y + self.start[1])
 
-    def create(self, angle=None):
+    def move(self, end):
+        self.length = int(
+            math.sqrt((self.start[0] - end[0]) ** 2 + (self.start[1] - end[1]) ** 2)
+        )
+        self.angle = math.atan2((self.start[1] - end[1]), (end[0] - self.start[0]))
+
+    def create(self, end=None, angle=None):
         triang_height = 10
         self.angle = self.angle + angle if angle else self.angle
         triang_side = 2 * ((triang_height) / (3 ** (1 / 2)))
@@ -32,6 +37,18 @@ class arrow:
         self.create(angle)
         pygame.draw.polygon(surface, self.color, self.head)
         pygame.draw.line(surface, self.color, self.body[0], self.body[1])
+
+
+# class rot_arrow(arrow):
+#     def create(self, start, end, angle=None):
+#         self.length = int(
+#             math.sqrt((start[0] - end[0]) ** 2 + (start[1] - end[1]) ** 2)
+#         )
+#         self.start = start
+#         self.end = end
+#         self.angle = math.atan2((start[1] - end[1]), (end[0] - start[0]))
+#         super().create(angle)
+#         super().draw(surface)
 
 
 class grid:
