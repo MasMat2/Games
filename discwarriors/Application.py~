@@ -1,0 +1,61 @@
+# Disc Warriors
+#
+#	Application.py
+#		Basic Game class for variables & state change
+#
+
+import pygame, sys, functions, Arena, Area, Battler, Bself, Bbug, GUI, Wself, Wbug, Application
+from pygame import *
+from functions import *
+
+class DiscWarriors:
+	def __init__(self,width=306,height=200,state="Title"):
+		pygame.init()
+		print "PyGame Initialized"
+		self.width=width
+		self.height=height
+		self.screen=pygame.display.set_mode((self.width,self.height))
+		pygame.display.set_caption('Disc Warriors')
+		print "Window Set"
+		self.font=pygame.font.Font('resc/Vera.ttf',16)
+		self.Test=GUI.Menu(("World","Battle","Exit"),"Title",25)
+		self.backSpr=load_image("arenas/default/grid.png", False)
+		self.state=state
+		self.quit=False
+		self.fps=pygame.time.Clock()
+		print "Application Variables Set"
+		self.arena=Arena.Arena(Bself.player("krake.dfile"),"teron")
+		self.area=Area.Area(Wself.player("krake.dfile"),"teron")
+	
+	def getQuit(self, events):
+		for event in events:
+			if event.type == QUIT: 
+				self.quit=True
+				pygame.quit()
+				sys.exit()
+			if event.type==KEYDOWN:
+				if event.key==K_ESCAPE:
+					self.quit=True
+					pygame.quit()
+					sys.exit()
+	
+	def Main(self,Wbug,Wplayer):
+		if self.quit==False:
+			Handler=pygame.event.get()
+			self.fps.tick(30)
+			self.screen.fill((0,0,0))
+			if self.state=="World":
+				self.area.step(Handler)
+			if self.state=="Title":
+				temp=self.Test.step(self.screen,Handler)
+				if temp!=None:
+					self.state=temp
+			if self.state=="Fight":
+				if pygame.mixer.music.get_busy()==False:
+					pygame.mixer.music.load('resc/Brainkrieg.ogg')
+					pygame.mixer.music.play()
+				self.arena.step(self.screen,Handler)
+			pygame.display.flip()
+			self.getQuit(Handler)
+		else:
+			exit()

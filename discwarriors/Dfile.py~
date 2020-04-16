@@ -1,0 +1,48 @@
+#
+#	Dfile.py
+#		for importing dfiles
+#
+
+import os.path
+
+def getType(path):
+	if os.path.isfile(path):
+		dfile=open(path)
+		cont=dfile.read()
+		dfile.close()
+		beg=cont.find("[")+1
+		end=cont.find(";")
+		return cont[beg:end]
+	else:
+		print "FILE "+path+" NOT FOUND!"
+		raise SystemExit
+		
+def getName(path):
+	if os.path.isfile(path):
+		dfile=open(path)
+		cont=dfile.read()
+		dfile.close()
+		beg=cont.find(";")+1
+		end=cont.find("]")
+		return cont[beg:end]
+	else:
+		print "FILE "+path+" NOT FOUND!"
+		raise SystemExit
+
+def getAtr(path,atr):
+	if os.path.isfile(path):
+		dfile=open(path)
+		for line in dfile:
+			if line.find(atr)!=-1:
+				length=len(atr)+1
+				return line[length:-2]
+				dfile.close()
+				break;
+			elif line=="[NM]":
+				return "Not Found"
+				dfile.close()
+			else:
+				continue
+	else:
+		print "FILE "+path+" NOT FOUND!"
+		raise SystemExit

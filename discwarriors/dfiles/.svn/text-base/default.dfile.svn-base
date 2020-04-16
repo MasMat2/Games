@@ -1,0 +1,15 @@
+[desyns;default]
+[B]
+offx=0;
+offy=45;
+mem=30;
+Startx=0;
+Starty=0;
+SPR=SPR_R.png;
+SPL=SPR_L.png;
+SPU=SPR_U.png;
+SPD=SPR_D.png;
+[/B]
+[W]
+[/W]
+[NM]

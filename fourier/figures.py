@@ -33,7 +33,7 @@ class arrow:
         ]
         self.body = [self.rotate(0, 0), self.rotate(self.length, 0)]
 
-    def draw(self, surface, angle=0):
+    def draw(self, surface, angle=None):
         self.create(angle)
         pygame.draw.polygon(surface, self.color, self.head)
         pygame.draw.line(surface, self.color, self.body[0], self.body[1])
@@ -46,9 +46,10 @@ class rot_arrow(arrow):
         self.end = (start[0]+length*math.cos(angle), start[1]+length*math.sin(angle))
         self.length = length
         self.angle = angle
-    
+
     def move(self, length, angle):
         self.end = (self.start[0]+length*math.cos(angle), self.start[1]+length*math.sin(angle))
+        print(self.end)
         self.length = length
         self.angle = angle
 
@@ -153,6 +154,8 @@ class main:
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self.on_cleanup()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pygame.mouse.get_pos()
 
     def on_loop(self):
         pass
@@ -181,4 +184,3 @@ class main:
 if __name__ == "__main__":
     theApp = main()
     theApp.on_execute()
-

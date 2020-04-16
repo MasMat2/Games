@@ -1,0 +1,11 @@
+[desyns;krake]
+offx=0;
+offy=24;
+mem=30;
+Startx=0;
+Starty=0;
+SPR=krake_R.png;
+SPL=krake_L.png;
+SPU=krake_U.png;
+SPD=krake_D.png;
+[NM]

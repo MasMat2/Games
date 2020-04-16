@@ -1,0 +1,78 @@
+Hello. This is the source code tour for Disc Warriors REVISION 34-35. I will be your tour guide. No questions until the tour is finished, and, please, keep your hands and feet inside the vehicle at all times.
+
+Right now, the code is not organized. But, for now, I'm keeping it the way it is for easy accesibility and because I want to keep things separate for a while until they all work completely (ex. the split of Battler and Bself and Bbug)
+
+So, let's start our main directory in order of import-ance (that was a bad pun). We first be going through source files then covering the various formats in Disc Warriors
+
+Main Source Files:
+
+/DiscWarriors.py
+	This is the file for running the main part of the game. It imports all needed modules and initializes some characters. Looking over it, I think I need to update it to a better working version
+
+/Application.py
+	Contains the main loop. Whether to merge these to, I don't know. It's kinda nice to have the
+	initializations and the main code separate. The main loop has 3 states: World, Title, and Fight Simple enough.
+
+Batttling:
+
+/Battler.py
+	The parent class for Bself's and Bbugs
+
+/Bself.py
+	This is the player class for battling. It initializes itself with a dfile and moves. ...That's pretty much it for now.
+
+/Bbug.py
+	So far probably the most advanced and customizable class of Disc Warriors. It may look like just an init function, but, it loads needed files from the dfile and all needed functions from it's plugin file more on this later
+
+/Battack.py
+	This is the base file for attacks in the Arena
+
+/Arena.py
+	I take it back. THIS is the most advanced class of Disc Warriors (but not yet the most advanced). This loads the needed plugin for the Arena (so it can only be the default one) and initializes the Arena through it. The step event is also done. All that commented out code is useless. More on the Arena plugins later
+
+/Dfile.py
+	This loads dfile types/names/attributes for the Battler (and soon the Wself's and Wbugs). More on this later.
+
+World:
+
+/Wself.py
+	So far, this is the only file used. It just moves around the screen. Dfile functionality will eventually be added.
+	
+/Area.py
+	These are the places where Wself and Wbugs interact
+	
+/Explorer.py
+	This is the base class for Wself and Wbugs
+
+Miscelaneous (however you spell it):
+
+/GUI.py
+	Just some GUI menus. They are controlled by the arrow keys. The "longest" function needs some working on with it's implementation.
+
+	The longest function returns the length of the longest string. It then blit's a rectange that will fit the text. I think i took out the code for now
+
+/functions.py
+	Just random that don't belong elsewhere. So far, just load_image.
+
+Formats:
+
+Oooh! The fun part! The file formats are what make Disc Warriors so customizable.
+
+/Arenas
+	This is where all arena plugins go. A plugin so far includes to things: The plugin file and the base sprite. The "enemies" function defines the enemies to be in the arena while the "sprite" function returns the base sprite. The base sprite can either be a grid or just a basic image. The "grid" is needed, but is not yet fully functional. It will eventually be able to have obstacles.
+
+/chars
+	This holds the files for Bugs and Desyns (but so far only Battlers).
+
+/chars/desyns
+	So far, it only holds some images. I might eventually make Bplugins for this class.
+
+/chars/bugs
+	Holds the plugin files for Bugs. Bug plugins include any images as well as a Bplugin.py file. The Bplugin is required to have two different functions: update and move.
+	
+/dfiles
+	This holds the dfiles. Dfiles hold basic stats of Desyns/Bugs and other variables (like sprite names)
+
+Conclusion:
+
+Well that's pretty much it in a nutshell. If I've forgotten anything, please inform me at sethsdl999@hotmail.com. Another good way to discuss issues are on the DW forum at http://www.fazzitron.com/forums

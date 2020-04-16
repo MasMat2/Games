@@ -14,10 +14,10 @@ class sine_func:
         self.y = math.sin(self.t) * radius
     
     def normal(self):
-        return (int(self.x), int(-self.y))
+        return int(self.x), int(-self.y)
     
     def polar(self):
-        return (self.y, self.t)
+        return self.y, self.t
 
 
 class sine_wave:
@@ -51,8 +51,9 @@ class compact_grid:
         self.grid = grid((0, 100, 100), (x, y), 20, width)
         self.arrow = rot_arrow((255, 255, 255), (x + width // 2, y + width // 2), 0, 0)
 
-    def update(self, length, angle):
-        self.arrow.move(length, angle)
+    def update(self, normal):
+        module, argument = normal
+        self.arrow.move(module, argument)
 
     def draw(self, surface):
         self.grid.draw(surface)
@@ -62,7 +63,6 @@ class compact_grid:
 class compact_wave(sine_wave):
     def __init__(self, size):
         super().__init__(size)
-
         top, bottom, left, right = start_y - radius,start_y + radius, start_x, start_x * n_x - 60
         self.ruler = [
             ruler(
@@ -93,7 +93,8 @@ class compact_wave(sine_wave):
         ]
         self.rulers = (self.ruler, self.ruler1)
 
-    def update(self, real, imag):
+    def update(self, normal):
+        real, imag = normal
         self.real = real + start_x - radius * 2
         self.imag = imag + start_y
         super().update(self.imag)
@@ -122,6 +123,7 @@ radius = 50
 ruler_measure = 4
 unit_length = (start_x * (n_x - 1) - 60) // ruler_measure
 
+func =sine_func()
 
 class main:
     def __init__(self):
@@ -133,24 +135,22 @@ class main:
         pygame.init()
         self._display_surf = pygame.display.set_mode(self.size, 0, 32)
         self._running = True
-
-        self.sine_func = sine_func()
-        self.compact = [compact_grid(), compact_wave(self.size)]
+        self.compact_grid = compact_grid()
+        self.compact_wave = compact_wave(self.size)
 
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self._running = False
 
     def on_loop(self):
-        self.sine_func.update(unit_length, frequency=3)
-        self.real, self.imag = self.sine_func.normal()
-        for element in self.compact:
-            element.update(self.real, self.imag)
+        func.update(unit_length, frequency=3)
+        self.compact_grid.update(func.polar())
+        self.compact_wave.update(func.normal())
 
     def on_render(self):
         self._display_surf.fill((0, 0, 0))
-        for element in self.compact:
-            element.draw(self._display_surf)
+        self.compact_grid.draw(self._display_surf)
+        self.compact_wave.draw(self._display_surf)
         pygame.display.update()
 
     def on_cleanup(self):

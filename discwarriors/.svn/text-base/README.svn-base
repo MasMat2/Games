@@ -1,0 +1,63 @@
+DESCRIPTION:
+
+The world is unknowing of a new age of technological advances in a vast island in the Bermuda Triangle. In this country, the most advanced thing is the E-World. It's an electronic world that people can actually travel to. You can live, eat, and breathe there. To do this though, you need a Desyn, and a Runner. A Desyn is an electronic being that you use to go into the E-World by merging with them to give you the strength to go around and fight of bugs or bullies. A Runner is the device that holds the Desyn while you are in the real world, holds your discs, and transports you through the two worlds.
+Changes
+This is the final Pre-Alpha release before the first Alpha release. Only a few more features are needed till then.
+
+FEATURES:
+
+Workable Menu GUI system
+Plug-in system for players, enemies, battle arenas, areas (and eventually attacks)
+State system
+Enemies that can be fought
+More, but I can't remember. It's not much at the moment, but it's a major improvement to the C++ version.
+
+HOW TO:
+
+World
+
+Move with the arrow keys (duh)
+Bring up the Menu with the Enter key
+Click "Engage" in the Menu to start attacking bugs
+Under Engage, click "Info" to see there health and "Ok" to begin a battle with them
+Battle
+
+Move with the arrow keys (again, duh)
+Use the Space key to attack
+
+Current Bugs:
+
+It crashes if an attack goes off of the right or bottom of the screen
+
+BUGS:
+-Attacks can run into Battlers, but battlers can't run into attacks
+
+CHANGE LOG:
+v.1.0.0
+-Get grid to blit
+-Get self to blit correctly
+
+v.2.0.0
+-Get self to move
+-Get self to face the right direction
+
+v.3.0.0
+-Add Functional Title Screen
+-Add world
+-Make character walk through world
+-Add action screen
+-Add bug
+-Get bug to face right direction
+
+v.3.5.0
+World
+-Add Wbug
+-Make action screen functional (engaging bug)
+Battle
+-Add Arena Class
+-Give self attack using arrays
+
+v.4.0.0
+-Get bug to attack using arrays
+-Make it possible to die
+-Change grid to background

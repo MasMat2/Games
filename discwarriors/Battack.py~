@@ -1,0 +1,30 @@
+#!/usr/bin/python
+#
+#	Battack.py
+#		Attack class for battlers
+#
+
+import pygame, sys
+from pygame.locals import *
+from functions import load_image
+
+class attack(pygame.sprite.Sprite):
+	def __init__(self, parent, afile):
+		pygame.sprite.Sprite.__init__(self)
+		sys.path.append("atk/"+afile)
+		import afile
+		self.direction=parent.direction
+		self.off=afile.off()
+		self.cord=parent.COA()
+		self.x=self.off[0]+self.cord[0]*34
+		self.y=self.off[1]+self.cord[0]*20+80
+		self.rect=pygame.Rect(parent.COA(),(afile.width(),afile.height()))
+		self.sprite=load_image("atk/"+afile+"/"+sprite)
+		self.update=afile.update
+		sys.path.pop()
+		
+	def draw(self):
+		ts=pygame.display.get_surface()
+		ts.blit(self.sprite, (self.x, self.y))
+
+	def getType(self):

@@ -1,0 +1,79 @@
+#Disc Warriors
+#
+#	Wself.py
+#		Class for the character in the world
+#
+
+import Dfile, pygame, functions, GUI, math
+from pygame.locals import *
+from functions import load_image
+
+class player(pygame.sprite.Sprite):
+	def __init__(self,path):
+		pygame.sprite.Sprite.__init__(self)
+		self.dfile="dfiles/"+path
+		self.name=Dfile.getName(self.dfile)
+		self.type=Dfile.getType(self.dfile)
+		self.moving='N'
+		self.off=(-16,-33)
+		self.x=40
+		self.y=40
+		self.sprite=load_image("resc/player.png")
+		self.action=False
+		
+		self.inc=5
+		
+	def update(self,events,sur,of1):
+		keys=pygame.key.get_pressed()
+		if keys[K_LEFT]:	
+			if self.x>3-self.off[0]:
+				self.x-=self.inc
+		if keys[K_RIGHT]:
+			if self.x<608+self.off[0]:
+				self.x+=self.inc
+		if keys[K_UP]:
+			if self.y>2-self.off[1]:
+				self.y-=self.inc
+		if keys[K_DOWN]:
+			if self.y<460+self.off[1]:
+				self.y+=self.inc
+		if self.x>608:
+			self.x=608
+		if self.x<3:
+			self.x=0
+		if self.y>460:
+			self.y=460
+		if self.y<2:
+			self.y=2
+		self.draw(sur,of1)
+
+		return self.y
+		
+	def draw(self,surf,of2):
+		tempx=self.x+self.off[0]-of2[0]
+		tempy=self.y+self.off[1]-of2[1]
+		surf.blit(self.sprite, (tempx,tempy))
+	
+	def isPlayer(self):
+		return True
+
+	def num(self,x,y):
+		if functions.dist(self,x)>functions.dist(self,y):
+			return 1
+		elif functions.dist(self,x)==functions.dist(self,y):
+			return 0
+		else:
+			return -1
+	
+	def gsort(self,x):
+		nGrid=[]
+		x.sort(self.num)
+		print "X: ",
+		print x
+		for item in x:
+			print item
+			print functions.dist(self,item)
+			nGrid.append([item,functions.dist(self,item)])
+		print nGrid
+		del x
+		return nGrid

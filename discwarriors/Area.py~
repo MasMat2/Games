@@ -1,0 +1,84 @@
+#Disc Warriors
+#
+#	Area.py
+#		World class for E-World areas
+#
+
+import pygame, Wself, Wbug, GUI, sys, functions
+from pygame.locals import *
+
+def num(x,y):
+	if x[1]>y[1]:
+		return 1
+	elif x[1]==y[1]:
+		return 0
+	else:
+		return -1
+
+class Area():
+	def __init__(self, player, enemy):
+		self.Menu=GUI.Menu(("Engage","Talk","Exit"),"Actions",10)
+		ARplugin=None
+		sys.path.append("area/default")
+		import ARplugin
+		self.draw=ARplugin.draw
+		self.width=ARplugin.width()
+		self.height=ARplugin.height()
+		self.grid=[]
+		self.off=[0,0]
+		self.sprite=functions.load_image(ARplugin.sprite(),False)
+		self.temp=pygame.Surface((self.width,self.height)) 
+		self.action=False
+		
+		for nme in ARplugin.enemies(enemy):
+			string=nme[0]+".dfile"
+			bug=Wbug.bug(string)
+			bug.x=nme[1]
+			bug.y=nme[2]
+			self.grid.append([bug,bug.y])
+			
+		self.grid.append([player,player.y])
+		
+		sys.path.pop()
+		
+	def step(self,events):
+		self.temp.blit(self.sprite,(-self.off[0],-self.off[1],self.width,self.height))
+		for event in events:
+			if event.type==KEYDOWN:
+				if event.key==K_RETURN:
+					if self.action==False:
+						self.action=True
+						events=-1
+						break
+		if self.action==False:
+			self.grid.sort(num)
+		
+		for i in range(0,len(self.grid)):
+			if self.action==False:
+				self.grid[i][1]=self.grid[i][0].update(events,self.temp,self.off)
+				if self.grid[i][0].isPlayer():
+					if self.grid[i][0].x>153:
+						self.off[0]=self.grid[i][0].x-153
+					if self.grid[i][0].y>100:
+						self.off[1]=self.grid[i][0].y-100
+					if self.off[0]<0:
+						self.off[0]=0
+					if self.off[1]<0:
+						self.off[1]=0
+			else:
+				self.grid[i][0].draw(self.temp,self.off)
+		if self.grid==[]:
+			print "ERROR OCCURRED IN GRID!"
+			exit()
+		
+		self.draw(self,pygame.display.get_surface())
+		
+		if self.action==True:
+			if events!=-1:
+				temp=self.Menu.step(pygame.display.get_surface(),events)
+			else:
+				temp=True
+			if temp==False:
+				self.action=False
+			if temp==True:
+				pass

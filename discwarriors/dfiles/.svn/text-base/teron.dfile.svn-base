@@ -1,0 +1,15 @@
+[bugs;teron]
+[B]
+offx=0;
+offy=61;
+Startx=2;
+Starty=0;
+mem=30;
+SPR=teron_R.png;
+SPL=teron_L.png;
+SPU=teron_U.png;
+SPD=teron_D.png;
+[/B]
+[W]
+[/W]
+[NM]
